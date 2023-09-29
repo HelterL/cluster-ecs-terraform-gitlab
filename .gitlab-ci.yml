@@ -1,0 +1,52 @@
+image:
+    name: hashicorp/terraform:light
+    entrypoint:
+      - '/usr/bin/env'
+      - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+      - 'AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}'
+      - 'AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}'
+cache:
+  paths:
+    - .terraform
+before_script:
+    - terraform --version
+    - terraform init
+
+stages:
+  - configinicial
+  - plan
+  - apply
+
+config_inicial:    
+  stage: configinicial
+  script:
+    - terraform validate   
+    
+plan:
+  stage: plan
+  needs:
+    - config_inicial
+  script:
+    - terraform plan -out plan.tfplan
+  only:
+    - merge_requests
+
+build:
+  stage: plan
+  needs:
+    - config_inicial
+  script:
+    - terraform plan 
+  only:
+    - main
+
+apply:
+  stage: apply
+  needs:
+    - build
+  script:
+    - terraform apply -auto-approve
+  dependencies:
+    - build
+  only:
+    - main
