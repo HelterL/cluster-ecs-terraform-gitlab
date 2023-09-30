@@ -12,4 +12,3 @@
 - AUTO SCALING GROUP
 - NGINX
 - ECR
-- jahsd
