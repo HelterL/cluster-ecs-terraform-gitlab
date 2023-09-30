@@ -22,5 +22,4 @@ publish:
     - docker --version
   script:
     - docker build -t $DOCKER_REGISTRY/$APP_NAME:$CI_PIPELINE_IID ./app
-    - docker tag app_repo:latest $DOCKER_REGISTRY/$APP_NAME:$CI_PIPELINE_IID
     - docker push $DOCKER_REGISTRY/$APP_NAME:$CI_PIPELINE_IID
