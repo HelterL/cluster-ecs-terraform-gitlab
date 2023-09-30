@@ -20,5 +20,5 @@ publish:
     - docker info
     - docker --version
   script:
-    - docker build -t $DOCKER_REGISTRY/app_ecs:1.0 ./app
-    - docker push $DOCKER_REGISTRY
+    - docker build -t $DOCKER_REGISTRY/app_ecs:latest ./app
+    - docker push $DOCKER_REGISTRY/app_ecs:latest
