@@ -52,6 +52,7 @@ module "ecs" {
   iam_role_arn = module.iam.aws_iam_role_arn
   alb_listener = module.alb.alb_listener
   alb_target_group_arn = module.alb.target_group_arn
+  repo_url_ecr = module.ecr.aws_ecr_repository_endpoint
 }
 
 module "alb" {
@@ -65,4 +66,8 @@ module "asg" {
   source = "./asg"
   ecs_cluster_name = module.ecs.ecs_cluster_name
   ecs_cluster_service = module.ecs.ecs_cluster_service
+}
+
+module "ecr" {
+  source = "./ecr"
 }

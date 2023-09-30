@@ -41,8 +41,8 @@ resource "aws_ecs_task_definition" "task" {
   memory = 1024
   container_definitions = jsonencode([
     {
-      name      = "nginx"
-      image     = "nginx:1.23.1"
+      name      = "app_lab"
+      image     = "${var.repo_url_ecr}:6"
       cpu       = 10
       memory    = 512
       essential = true
@@ -74,12 +74,12 @@ resource "aws_ecs_service" "service" {
   load_balancer {
     target_group_arn = var.alb_target_group_arn
     container_port = 80
-    container_name = "nginx"
+    container_name = "app_lab"
   }
   lifecycle {
     ignore_changes = [task_definition]
   }
-  depends_on = [var.alb_listener,var.iam_role_policy_attachment]
+  depends_on = [var.alb_listener,var.iam_role_policy_attachment, var.repo_url_ecr]
 }
 
 output "ecs_cluster_name" {

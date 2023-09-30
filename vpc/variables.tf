@@ -6,10 +6,10 @@ variable "environment" {
 }
 
 variable "public_subnets" {
-  description = "subnets publicas"
+  description = "numero de subnets publicas"
 }
 variable "private_subnets" {
-  description = "subnets privadas"
+  description = "numerdo de subnets privadas"
 }
 variable "cidr_block" {
   description = "cidr block da VPC"

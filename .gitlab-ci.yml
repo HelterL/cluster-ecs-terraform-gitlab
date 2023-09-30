@@ -1,52 +1,25 @@
-image:
-    name: hashicorp/terraform:light
-    entrypoint:
-      - '/usr/bin/env'
-      - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
-      - 'AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}'
-      - 'AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}'
-cache:
-  paths:
-    - .terraform
-before_script:
-    - terraform --version
-    - terraform init
+# Simple example of CI to build a Docker container and push it to Amazon ECR
+variables:
+  DOCKER_REGISTRY: 781229711255.dkr.ecr.us-east-1.amazonaws.com/app_repo
+  AWS_DEFAULT_REGION: us-east-1
+  APP_NAME: app_ecs
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: ""
 
-stages:
-  - configinicial
-  - plan
-  - apply
-
-config_inicial:    
-  stage: configinicial
+publish:
+  stage: build
+  image: 
+    name: docker:latest
+  services:
+    - docker:19-dind
+  before_script:
+    - apk add --no-cache curl jq python3 py3-pip
+    - pip install awscli
+    - aws ecr get-login-password | docker login --username AWS --password-stdin $DOCKER_REGISTRY
+    - aws --version
+    - docker info
+    - docker --version
   script:
-    - terraform validate   
-    
-plan:
-  stage: plan
-  needs:
-    - config_inicial
-  script:
-    - terraform plan -out plan.tfplan
-  only:
-    - merge_requests
-
-build:
-  stage: plan
-  needs:
-    - config_inicial
-  script:
-    - terraform plan 
-  only:
-    - main
-
-apply:
-  stage: apply
-  needs:
-    - build
-  script:
-    - terraform apply -auto-approve
-  dependencies:
-    - build
-  only:
-    - main
+    - docker build -t $DOCKER_REGISTRY/$APP_NAME:$CI_PIPELINE_IID .
+    - docker push $DOCKER_REGISTRY/$APP_NAME:$CI_PIPELINE_IID
