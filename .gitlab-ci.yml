@@ -1,8 +1,7 @@
 # Simple example of CI to build a Docker container and push it to Amazon ECR
 variables:
-  DOCKER_REGISTRY: 781229711255.dkr.ecr.us-east-1.amazonaws.com/app_repo
+  DOCKER_REGISTRY: 781229711255.dkr.ecr.us-east-1.amazonaws.com
   AWS_DEFAULT_REGION: us-east-1
-  APP_NAME: app_ecs
   DOCKER_HOST: tcp://docker:2375
   DOCKER_DRIVER: overlay2
   DOCKER_TLS_CERTDIR: ""
@@ -21,5 +20,5 @@ publish:
     - docker info
     - docker --version
   script:
-    - docker build -t $DOCKER_REGISTRY/$APP_NAME:$CI_PIPELINE_IID ./app
-    - docker push $DOCKER_REGISTRY/$APP_NAME:$CI_PIPELINE_IID
+    - docker build -t $DOCKER_REGISTRY/app_ecs:1.0 ./app
+    - docker push $DOCKER_REGISTRY
