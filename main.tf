@@ -66,7 +66,3 @@ module "asg" {
   ecs_cluster_name = module.ecs.ecs_cluster_name
   ecs_cluster_service = module.ecs.ecs_cluster_service
 }
-
-module "ecr" {
-  source = "./ecr"
-}

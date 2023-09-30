@@ -46,7 +46,6 @@ resource "aws_ecs_task_definition" "task" {
       cpu       = 10
       memory    = 512
       essential = true
-      "entryPoint": ["/"],
       portMappings = [
         {
           containerPort = 80
