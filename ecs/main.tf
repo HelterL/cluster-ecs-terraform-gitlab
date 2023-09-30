@@ -42,10 +42,11 @@ resource "aws_ecs_task_definition" "task" {
   container_definitions = jsonencode([
     {
       name      = "app_lab"
-      image     = "${var.repo_url_ecr}:6"
+      image     = "781229711255.dkr.ecr.us-east-1.amazonaws.com/app_repo:latest"
       cpu       = 10
       memory    = 512
       essential = true
+      "entryPoint": ["/"],
       portMappings = [
         {
           containerPort = 80
@@ -79,7 +80,7 @@ resource "aws_ecs_service" "service" {
   lifecycle {
     ignore_changes = [task_definition]
   }
-  depends_on = [var.alb_listener,var.iam_role_policy_attachment, var.repo_url_ecr]
+  depends_on = [var.alb_listener,var.iam_role_policy_attachment]
 }
 
 output "ecs_cluster_name" {

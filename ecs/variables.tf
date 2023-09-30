@@ -29,7 +29,3 @@ variable "iam_role_policy_attachment" {
 variable "iam_role_arn" {
   description = "iam role arn"
 }
-
-variable "repo_url_ecr" {
-  description = "URL do repo de imagens"
-}
